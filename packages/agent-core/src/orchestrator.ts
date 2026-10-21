@@ -202,7 +202,7 @@ Investigate the root cause using the tools provided. When you have diagnosed the
         model: 'gemini-3.8-flash',
         contents: stepContext,
         config: {
-          tools: [{ functionDeclarations: toolDeclarations }],
+          tools: [{ functionDeclarations: toolDeclarations as any }],
         },
       });
 
