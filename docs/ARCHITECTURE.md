@@ -1,7 +1,7 @@
 # PatchPilot — System Architecture Deep Dive
 
 ## Executive Summary
-**PatchPilot** is an event-driven autonomous CI failure triage and debugging agent built with **TypeScript, Node.js, Google Gemini API, Docker, PostgreSQL, and Stitch UI**. It ingests failing GitHub Actions CI runs via webhooks, conducts multi-step root-cause analysis through strictly bounded tool calling, validates candidate patches using deterministic AST parsing in < 5 ms, and verifies regression tests inside isolated, resource-capped Docker sandboxes before dispatching Pull Request review comments.
+**PatchPilot** is an event-driven autonomous CI failure triage and debugging agent built with **TypeScript, Node.js, Google Gemini API, Docker, PostgreSQL, and Next.js**. It ingests failing GitHub Actions CI runs via webhooks, conducts multi-step root-cause analysis through strictly bounded tool calling, validates candidate patches using deterministic AST parsing in < 5 ms, and verifies regression tests inside isolated, resource-capped Docker sandboxes before dispatching Pull Request review comments.
 
 ---
 

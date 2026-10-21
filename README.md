@@ -5,13 +5,9 @@
 [![Gemini AI](https://img.shields.io/badge/Google%20Gemini-Tool%20Calling-8E75B2?logo=google&logoColor=white)](https://ai.google.dev/)
 [![Docker](https://img.shields.io/badge/Docker-Sandboxes-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-PostgreSQL-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![Stitch UI](https://img.shields.io/badge/Stitch%20UI-Obsidian%20Telemetry-06B6D4)](https://github.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.4-black?logo=next.js&logoColor=white)](https://nextjs.org/)
 
-> **Target Resume Entry Implemented Verbatim:**
-> **PatchPilot – Autonomous CI Failure Triage & Debugging Agent** | *TypeScript, Node.js, Gemini AI (Tool Calling), Docker, PostgreSQL, GitHub Webhooks*
-> 1. Built an event-driven **agentic debugging pipeline** that ingests failing GitHub Actions CI logs via webhooks and orchestrates multi-step root-cause analysis using **Gemini structured tool calling** (`search_code`, `read_file`, `git_diff`).
-> 2. Executed candidate patches inside isolated, resource-capped **Docker sandboxes** to run targeted regression tests before posting automated PR review diffs, blocking hallucinated or non-compiling fixes from reaching maintainers.
-> 3. Enforced deterministic agent guardrails—including a **5-step reasoning loop cap**, AST syntax checks, and **token-budget circuit breakers**—while persisting execution traces and tool latencies in **PostgreSQL** for observability.
+> **PatchPilot** is an event-driven autonomous CI debugging engine that ingests failing CI logs, investigates root causes using Google Gemini function calling, validates syntax with AST parsing, and executes isolated regression tests before generating pull request review comments.
 
 ---
 
@@ -58,7 +54,7 @@
                       ┌─────────────────────────────────────────┐
                       │   Stage 6: PR Review & Telemetry        │
                       │   - Post GitHub suggestion comment      │
-                      │   - Stitch Obsidian Dashboard Replay    │
+                      │   - Interactive Dashboard Replay        │
                       └─────────────────────────────────────────┘
 ```
 
@@ -82,11 +78,10 @@
     1. *Stripe Concurrency:* Missing `nx=True` atomic lock in Redis webhook handler (`services/billing/webhook_handler.py`).
     2. *Pagination Off-By-One:* Page 1 skipping bug in query builder (`services/database/query_builder.ts`).
     3. *Auth Missing Await:* Async JWT verification returning unhandled Promise (`services/auth/token_verifier.ts`).
-- **Obsidian Telemetry Dashboard:**
-  - Designed in **Stitch** with dark-mode Linear/Datadog aesthetic.
-  - Top KPI Ribbon tracking Active Incidents, Sandbox Pass Rate %, Hallucinations Blocked, Tool Latency, and Token Budget Quota.
-  - Center 5-step Reasoning Waterfall with millisecond latency breakdowns.
-  - Right Side-by-Side Unified Diff viewer, AST badge, Docker terminal stream, and "Approve & Post PR Review" CTA.
+- **Interactive Telemetry Dashboard:**
+  - Modern dark-mode console tracking incident runs, agent reasoning steps, and token quotas.
+  - Center multi-step reasoning waterfall with millisecond latency breakdowns.
+  - Side-by-side unified diff viewer, AST badge, sandbox logs, and manual PR approval workflow.
 
 ---
 
@@ -120,10 +115,10 @@ SANDBOX_TIMEOUT_MS=30000
 
 ### 4. Seed Database & Run Full Test Suite
 ```bash
-# Seed 2 historical incidents into system of record
+# Seed historical incidents into system of record
 npm run seed
 
-# Run all 14 unit and integration tests across AST, Sandbox, Agent, and API
+# Run unit and integration tests across AST, Sandbox, Agent, and API
 npm test
 ```
 
@@ -131,7 +126,7 @@ npm test
 ```bash
 npm run dev
 ```
-Open **[http://localhost:3000](http://localhost:3000)** in your browser to inspect the Stitch Obsidian Telemetry dashboard and click **"Simulate CI Failure"** to watch the autonomous agent run live.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser to inspect the telemetry dashboard and click **"Simulate CI Failure"** to watch the autonomous agent run live.
 
 ---
 
@@ -139,7 +134,6 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser to inspe
 
 - **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md):** In-depth breakdown of the 6-stage pipeline, state machine, and Docker isolation.
 - **[docs/GUARDRAILS_AND_OBSERVABILITY.md](docs/GUARDRAILS_AND_OBSERVABILITY.md):** 3-layer anti-hallucination defense and PostgreSQL telemetry data model.
-- **[docs/INTERVIEW_PREP.md](docs/INTERVIEW_PREP.md):** 10 senior backend and AI systems interview questions answered with technical depth.
 
 ---
 
