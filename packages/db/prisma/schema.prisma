@@ -1,0 +1,119 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum IncidentStatus {
+  QUEUED
+  ANALYZING
+  SANDBOX_TESTING
+  VERIFIED
+  PR_COMMENT_POSTED
+  REJECTED_BY_AST
+  REJECTED_BY_SANDBOX
+  HALTED_BY_GUARDRAIL
+  FAILED
+}
+
+enum GuardrailHaltReason {
+  NONE
+  STEP_CAP_REACHED
+  TOKEN_BUDGET_EXCEEDED
+  SANDBOX_TIMEOUT
+  AST_SYNTAX_ERROR
+}
+
+model Repository {
+  id              String        @id @default(uuid())
+  githubRepoId    BigInt        @unique
+  owner           String
+  name            String
+  defaultBranch   String        @default("main")
+  autoPostPrReview Boolean      @default(false)
+  createdAt       DateTime      @default(now())
+  incidents       IncidentRun[]
+}
+
+model WebhookDelivery {
+  deliveryId      String   @id // X-GitHub-Delivery header for idempotency
+  eventType       String
+  payloadHash     String
+  processedAt     DateTime @default(now())
+}
+
+model IncidentRun {
+  id                  String              @id @default(uuid())
+  repositoryId        String
+  repository          Repository          @relation(fields: [repositoryId], references: [id])
+  workflowRunId       BigInt
+  pullRequestNumber   Int?
+  commitSha           String
+  failingJobName      String
+  rawErrorSnippet     String
+  status              IncidentStatus      @default(QUEUED)
+  haltReason          GuardrailHaltReason @default(NONE)
+  stepsTaken          Int                 @default(0)
+  maxStepsAllowed     Int                 @default(5)
+  totalPromptTokens   Int                 @default(0)
+  totalOutputTokens   Int                 @default(0)
+  tokenBudgetLimit    Int                 @default(25000)
+  totalDurationMs     Int?
+  createdAt           DateTime            @default(now())
+  completedAt         DateTime?
+  stepTraces          AgentStepTrace[]
+  toolCalls           ToolCallLog[]
+  candidatePatches    CandidatePatch[]
+
+  @@index([repositoryId, status])
+  @@index([commitSha])
+}
+
+model AgentStepTrace {
+  id               String      @id @default(uuid())
+  incidentRunId    String
+  incidentRun      IncidentRun @relation(fields: [incidentRunId], references: [id], onDelete: Cascade)
+  stepNumber       Int         // 1 to 5
+  thoughtSummary   String
+  promptTokens     Int
+  completionTokens Int
+  llmLatencyMs     Int
+  createdAt        DateTime    @default(now())
+
+  @@unique([incidentRunId, stepNumber])
+}
+
+model ToolCallLog {
+  id               String      @id @default(uuid())
+  incidentRunId    String
+  incidentRun      IncidentRun @relation(fields: [incidentRunId], references: [id], onDelete: Cascade)
+  stepNumber       Int
+  toolName         String      // search_code | read_file | git_diff | propose_patch
+  toolArgsJson     Json
+  toolOutputText   String
+  toolLatencyMs    Int
+  isError          Boolean     @default(false)
+  createdAt        DateTime    @default(now())
+
+  @@index([incidentRunId, toolName])
+}
+
+model CandidatePatch {
+  id                  String      @id @default(uuid())
+  incidentRunId       String
+  incidentRun         IncidentRun @relation(fields: [incidentRunId], references: [id], onDelete: Cascade)
+  targetFilePath      String
+  unifiedDiff         String
+  rootCauseSummary    String
+  astPassed           Boolean
+  astErrorDetails     String?
+  sandboxExitCode     Int?
+  sandboxStdout       String?
+  sandboxStderr       String?
+  sandboxDurationMs   Int?
+  postedToGithubPrUrl String?
+  createdAt           DateTime    @default(now())
+}

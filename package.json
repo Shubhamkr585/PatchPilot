@@ -1,27 +1,42 @@
 {
-  "name": "trip-hack",
-  "version": "0.1.0",
+  "name": "patchpilot",
+  "version": "1.0.0",
+  "description": "PatchPilot — Autonomous CI Failure Triage & Debugging Agent",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "tsx packages/db/src/seed.ts",
+    "test": "tsx packages/sandbox-runner/tests/sandbox-runner.test.ts && tsx packages/agent-core/tests/orchestrator.test.ts && tsx apps/api/tests/api.test.ts",
+    "test:sandbox": "tsx packages/sandbox-runner/tests/sandbox-runner.test.ts",
+    "test:agent": "tsx packages/agent-core/tests/orchestrator.test.ts",
+    "test:api": "tsx apps/api/tests/api.test.ts",
+    "api:start": "tsx apps/api/src/server.ts"
   },
   "dependencies": {
     "@google/genai": "^2.30.0",
+    "@prisma/client": "5.22.0",
+    "diff": "^9.0.0",
+    "dotenv": "^18.0.8",
+    "lucide-react": "^1.60.0",
     "next": "16.4.2",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
+    "@types/diff": "^7.0.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "prisma": "5.22.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

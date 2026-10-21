@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local databases & runtime cache
+.patchpilot_store.json
+.seen_deliveries.json
+.pgdata/
+
+# internal prompt and plan files
+patchpilot_antigravity_master_prompt.md
+*.plan.md
+
+# interview notes
+docs/INTERVIEW_PREP.md
