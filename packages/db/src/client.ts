@@ -1,4 +1,5 @@
-import { PrismaClient, IncidentStatus, GuardrailHaltReason } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { IncidentStatus, GuardrailHaltReason } from './types';
 import * as fs from 'fs';
 import * as path from 'path';
 

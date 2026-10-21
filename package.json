@@ -4,8 +4,9 @@
   "description": "PatchPilot — Autonomous CI Failure Triage & Debugging Agent",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate --schema=packages/db/prisma/schema.prisma",
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate --schema=packages/db/prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx packages/db/src/seed.ts",
